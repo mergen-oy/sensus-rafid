@@ -719,6 +719,53 @@
     .foto-input-hidden {
       display: none;
     }
+
+    /* ── IJASAH DINAMIS ── */
+    .ijasah-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .ijasah-row {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .ijasah-badge {
+      font-size: 10px;
+      font-weight: 800;
+      color: white;
+      background: var(--primary);
+      padding: 4px 8px;
+      border-radius: 20px;
+      white-space: nowrap;
+      min-width: 60px;
+      text-align: center;
+    }
+
+    .ijasah-badge.kk {
+      background: var(--accent);
+    }
+
+    .ijasah-row select {
+      border: 1.5px solid var(--border);
+      border-radius: 6px;
+      padding: 8px 10px;
+      font-size: 13px;
+      color: var(--text);
+      background: #fafafa;
+      width: 100%;
+      transition: border-color 0.2s;
+    }
+
+    .ijasah-row select:focus {
+      outline: none;
+      border-color: var(--primary);
+      background: #fff;
+    }
   </style>
 </head>
 
@@ -754,25 +801,12 @@
           </div>
           <div class="field">
             <label>Jml Anggota Keluarga</label>
-            <input type="number" id="jmlAnggota" placeholder="0" min="1">
+            <input type="number" id="jmlAnggota" placeholder="0" min="1" oninput="buildIjasahFields(this.value)">
           </div>
           <div class="field field-warning">
             <label>No. TLP / WA ⚠</label>
             <input type="tel" id="noTlp" placeholder="08xx-xxxx-xxxx">
             <span class="warning-badge">⚠ AWAS LUPA</span>
-          </div>
-          <div class="field">
-            <label>Ijasah Terakhir KK</label>
-            <select id="ijasahKK">
-              <option value="">-- Pilih --</option>
-              <option value="Tidak Sekolah">Tidak Sekolah</option>
-              <option value="SD / Sederajat">SD / Sederajat</option>
-              <option value="SMP / Sederajat">SMP / Sederajat</option>
-              <option value="SMA / Sederajat">SMA / Sederajat</option>
-              <option value="Diploma (D1-D4)">Diploma (D1-D4)</option>
-              <option value="Sarjana (S1)">Sarjana (S1)</option>
-              <option value="Pascasarjana (S2/S3)">Pascasarjana (S2/S3)</option>
-            </select>
           </div>
           <div class="field">
             <label>Kepesertaan BPJS</label>
@@ -785,6 +819,14 @@
               <option value="BPJS Kesehatan & Ketenagakerjaan">BPJS Kesehatan & Ketenagakerjaan</option>
             </select>
           </div>
+        </div>
+
+        <!-- IJASAH DINAMIS -->
+        <div id="ijasah-section" style="display:none;">
+          <div class="divider" style="margin: 12px 0 10px;"></div>
+          <div style="font-size:11px; font-weight:700; color:var(--muted); text-transform:uppercase; letter-spacing:0.5px; margin-bottom:8px;">
+            🎓 Ijasah Terakhir Anggota Keluarga</div>
+          <div id="ijasah-list" class="ijasah-list"></div>
         </div>
 
         <div class="divider"></div>
@@ -1176,7 +1218,7 @@
             <div class="receipt-row"><span class="receipt-label">No. UB:</span><span class="receipt-value" id="r-noUB">-</span></div>
             <div class="receipt-row"><span class="receipt-label">Jumlah Anggota:</span><span class="receipt-value" id="r-jmlAnggota">-</span></div>
             <div class="receipt-row"><span class="receipt-label">No. TLP / WA:</span><span class="receipt-value" id="r-noTlp">-</span></div>
-            <div class="receipt-row"><span class="receipt-label">Ijasah Terakhir:</span><span class="receipt-value" id="r-ijasahKK">-</span></div>
+            <div class="receipt-row"><span class="receipt-label">Ijasah Anggota:</span><span class="receipt-value" id="r-ijasahKK">-</span></div>
             <div class="receipt-row"><span class="receipt-label">BPJS:</span><span class="receipt-value" id="r-bpjs">-</span></div>
           </div>
         </div>
@@ -1395,6 +1437,48 @@ function doGet(e) {
       showToast('✅ Foto disimpan ke folder Unduhan!', 'sukses');
     }
 
+    // ── IJASAH: Bangun field dinamis sesuai jumlah anggota ──
+    const OPSI_IJASAH = [
+      '', 'Tidak Sekolah', 'SD / Sederajat', 'SMP / Sederajat',
+      'SMA / Sederajat', 'Diploma (D1-D4)', 'Sarjana (S1)', 'Pascasarjana (S2/S3)'
+    ];
+    const LABEL_OPSI = [
+      '-- Pilih --', 'Tidak Sekolah', 'SD / Sederajat', 'SMP / Sederajat',
+      'SMA / Sederajat', 'Diploma (D1-D4)', 'Sarjana (S1)', 'Pascasarjana (S2/S3)'
+    ];
+
+    function buildIjasahFields(jumlah) {
+      const n = parseInt(jumlah);
+      const section = document.getElementById('ijasah-section');
+      const list = document.getElementById('ijasah-list');
+      list.innerHTML = '';
+
+      if (!n || n < 1) {
+        section.style.display = 'none';
+        return;
+      }
+
+      section.style.display = 'block';
+
+      for (let i = 1; i <= n; i++) {
+        const isKK = i === 1;
+        const label = isKK ? `Anggota ${i} (KK)` : `Anggota ${i}`;
+        const badgeClass = isKK ? 'ijasah-badge kk' : 'ijasah-badge';
+
+        const opsiHTML = OPSI_IJASAH.map((val, idx) =>
+          `<option value="${val}">${LABEL_OPSI[idx]}</option>`
+        ).join('');
+
+        const row = document.createElement('div');
+        row.className = 'ijasah-row';
+        row.innerHTML = `
+          <span class="${badgeClass}">${label}</span>
+          <select id="ijasah_${i}">${opsiHTML}</select>
+        `;
+        list.appendChild(row);
+      }
+    }
+
     // ── Tampilkan toast ──
     let toastTimer;
     function showToast(msg, type, duration = 3000) {
@@ -1437,6 +1521,12 @@ function doGet(e) {
         if (wrapEl) wrapEl.classList.remove('has-photo');
       });
 
+      // Reset ijasah dinamis
+      const ijasahSection = document.getElementById('ijasah-section');
+      if (ijasahSection) ijasahSection.style.display = 'none';
+      const ijasahList = document.getElementById('ijasah-list');
+      if (ijasahList) ijasahList.innerHTML = '';
+
       // Scroll ke atas
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
@@ -1466,7 +1556,24 @@ function doGet(e) {
         noUB: document.getElementById('noUB').value.trim(),
         jmlAnggota: document.getElementById('jmlAnggota').value,
         noTlp: document.getElementById('noTlp').value.trim(),
-        ijasahKK: document.getElementById('ijasahKK').value,
+        ijasahKK: (() => {
+          const n = parseInt(document.getElementById('jmlAnggota').value) || 0;
+          const vals = [];
+          for (let i = 1; i <= n; i++) {
+            const el = document.getElementById('ijasah_' + i);
+            vals.push(el ? el.value : '-');
+          }
+          return vals.join(' | ');
+        })(),
+        ijasahAnggota: (() => {
+          const n = parseInt(document.getElementById('jmlAnggota').value) || 0;
+          const vals = [];
+          for (let i = 1; i <= n; i++) {
+            const el = document.getElementById('ijasah_' + i);
+            vals.push(el ? el.value : '-');
+          }
+          return vals.join(' | ');
+        })(),
         bpjs: document.getElementById('bpjs').value,
         fotoKK: document.getElementById('fotoKK').files.length > 0 ? 'Ya' : 'Tidak',
         geotagging: cbVal('cbGeotagging'),
@@ -1562,7 +1669,7 @@ function doGet(e) {
       document.getElementById('r-noUB').textContent = d.noUB || '-';
       document.getElementById('r-jmlAnggota').textContent = d.jmlAnggota ? d.jmlAnggota + ' Orang' : '-';
       document.getElementById('r-noTlp').textContent = d.noTlp || '-';
-      document.getElementById('r-ijasahKK').textContent = d.ijasahKK || '-';
+      document.getElementById('r-ijasahKK').textContent = d.ijasahAnggota || d.ijasahKK || '-';
       document.getElementById('r-bpjs').textContent = d.bpjs || '-';
 
       // Kelistrikan

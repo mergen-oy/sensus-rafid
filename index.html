@@ -646,6 +646,30 @@
             <input type="tel" id="noTlp" placeholder="08xx-xxxx-xxxx">
             <span class="warning-badge">⚠ AWAS LUPA</span>
           </div>
+          <div class="field">
+            <label>Ijasah Terakhir KK</label>
+            <select id="ijasahKK">
+              <option value="">-- Pilih --</option>
+              <option value="Tidak Sekolah">Tidak Sekolah</option>
+              <option value="SD / Sederajat">SD / Sederajat</option>
+              <option value="SMP / Sederajat">SMP / Sederajat</option>
+              <option value="SMA / Sederajat">SMA / Sederajat</option>
+              <option value="Diploma (D1-D4)">Diploma (D1-D4)</option>
+              <option value="Sarjana (S1)">Sarjana (S1)</option>
+              <option value="Pascasarjana (S2/S3)">Pascasarjana (S2/S3)</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>Kepesertaan BPJS</label>
+            <select id="bpjs">
+              <option value="">-- Pilih --</option>
+              <option value="Tidak Ada">Tidak Ada</option>
+              <option value="BPJS Kesehatan Mandiri">BPJS Kesehatan Mandiri</option>
+              <option value="BPJS Kesehatan PBI (Gratis)">BPJS Kesehatan PBI (Gratis)</option>
+              <option value="BPJS Ketenagakerjaan">BPJS Ketenagakerjaan</option>
+              <option value="BPJS Kesehatan & Ketenagakerjaan">BPJS Kesehatan & Ketenagakerjaan</option>
+            </select>
+          </div>
         </div>
 
         <div class="divider"></div>
@@ -802,27 +826,37 @@
       </div>
       <div class="section-body">
 
+        <div
+          style="font-size:11px; font-weight:700; color:var(--muted); text-transform:uppercase; letter-spacing:0.5px; margin-bottom:8px;">
+          Pengeluaran Rumah Tangga (Rp)</div>
+
         <div class="grid-3">
           <div class="field">
-            <label>Mkn 7 Hari (Rp)</label>
-            <input type="number" id="mkn7Hari" placeholder="0">
+            <label>Mingguan (Rp)</label>
+            <input type="number" id="mingguan" placeholder="0">
           </div>
           <div class="field">
-            <label>Non Mkn (Rp)</label>
-            <input type="number" id="nonMkn" placeholder="0">
+            <label>Bulanan (Rp)</label>
+            <input type="number" id="bulanan" placeholder="0">
           </div>
           <div class="field">
-            <label>Internet (Rp)</label>
-            <input type="number" id="internet" placeholder="0">
+            <label>Tahunan (Rp)</label>
+            <input type="number" id="tahunan" placeholder="0">
           </div>
         </div>
 
         <div class="grid-2 mt-10">
           <div class="field">
-            <label>Listrik (Rp)</label>
+            <label>Internet (Rp/bln)</label>
+            <input type="number" id="internet" placeholder="0">
+          </div>
+          <div class="field">
+            <label>Listrik (Rp/bln)</label>
             <input type="number" id="listrik" placeholder="0">
           </div>
         </div>
+
+        <p class="rp-hint" style="margin-top:8px;">💡 Isi dalam Rupiah (tanpa titik/koma)</p>
 
       </div>
     </div>
@@ -976,6 +1010,8 @@
             <div class="receipt-row"><span class="receipt-label">No. UB:</span><span class="receipt-value" id="r-noUB">-</span></div>
             <div class="receipt-row"><span class="receipt-label">Jumlah Anggota:</span><span class="receipt-value" id="r-jmlAnggota">-</span></div>
             <div class="receipt-row"><span class="receipt-label">No. TLP / WA:</span><span class="receipt-value" id="r-noTlp">-</span></div>
+            <div class="receipt-row"><span class="receipt-label">Ijasah Terakhir:</span><span class="receipt-value" id="r-ijasahKK">-</span></div>
+            <div class="receipt-row"><span class="receipt-label">BPJS:</span><span class="receipt-value" id="r-bpjs">-</span></div>
           </div>
         </div>
 
@@ -1007,6 +1043,18 @@
             <div class="receipt-row"><span class="receipt-label">Jenis Usaha (Tahun):</span><span class="receipt-value" id="r-usahaJenisTahun">-</span></div>
             <div class="receipt-row"><span class="receipt-label">Modal / Pendapatan:</span><span class="receipt-value" id="r-usahaKeuangan">-</span></div>
             <div class="receipt-row"><span class="receipt-label">Lokasi Usaha / NIB:</span><span class="receipt-value" id="r-usahaLokasiNIB">-</span></div>
+          </div>
+        </div>
+
+        <!-- PENGELUARAN -->
+        <div class="receipt-section">
+          <div class="receipt-section-title">💸 Pengeluaran Rumah Tangga</div>
+          <div class="receipt-grid">
+            <div class="receipt-row"><span class="receipt-label">Mingguan:</span><span class="receipt-value" id="r-mingguan">-</span></div>
+            <div class="receipt-row"><span class="receipt-label">Bulanan:</span><span class="receipt-value" id="r-bulanan">-</span></div>
+            <div class="receipt-row"><span class="receipt-label">Tahunan:</span><span class="receipt-value" id="r-tahunan">-</span></div>
+            <div class="receipt-row"><span class="receipt-label">Internet/bln:</span><span class="receipt-value" id="r-internet">-</span></div>
+            <div class="receipt-row"><span class="receipt-label">Listrik/bln:</span><span class="receipt-value" id="r-listrik">-</span></div>
           </div>
         </div>
 
@@ -1045,14 +1093,14 @@ function doPost(e) {
     if (sheet.getLastRow() === 0) {
       sheet.appendRow([
         'Timestamp','SLS','Nama KK','No UB','Jml Anggota',
-        'No TLP/WA',
+        'No TLP/WA','Ijasah Terakhir','BPJS',
         'Foto KK','Geotagging','Foto Ruang Tamu','Foto Depan Rmh','Foto Meteran',
         'No Meter/ID','KWH Watt',
         'Pekerjaan KK','Pekerjaan Istri','Pekerjaan Anak',
         'Gaji KK','Gaji Istri','Gaji Anak',
         'Usaha Jenis','Usaha Tahun','Modal','Biaya Produksi','Pendapatan','Karyawan/Upah',
         'Lokasi Usaha','No NIB',
-        'MKN 7 Hari','Non MKN','Internet','Listrik',
+        'Pengeluaran Mingguan','Pengeluaran Bulanan','Pengeluaran Tahunan','Internet','Listrik',
         'Kulkas','AC','Laptop/PC','Gas 3/5KG',
         'Emas (gr)','Nilai Emas','Mobil (unit)','Nilai Mobil','Motor (unit)','Nilai Motor',
         'Status Tempat','Nilai Aset Tempat','Keterangan Tempat'
@@ -1063,13 +1111,14 @@ function doPost(e) {
     sheet.appendRow([
       new Date().toLocaleString('id-ID'),
       d.sls, d.namaKK, d.noUB, d.jmlAnggota, d.noTlp,
+      d.ijasahKK, d.bpjs,
       d.fotoKK, d.geotagging, d.fotoRuang, d.fotoDepan, d.fotoMeteran,
       d.noMeter, d.kwhWatt,
       d.pkKK, d.pkIstri, d.pkAnak,
       d.gajiKK, d.gajiIstri, d.gajiAnak,
       d.usahaJenis, d.usahaTahun, d.usahaModal, d.biayaProduksi, d.pendapatan, d.karyawanUpah,
       d.lokasiUsaha, d.noNIB,
-      d.mkn7Hari, d.nonMkn, d.internet, d.listrik,
+      d.mingguan, d.bulanan, d.tahunan, d.internet, d.listrik,
       d.kulkas, d.ac, d.laptop, d.gas,
       d.emasGram, d.emasNilai, d.mobilUnit, d.mobilNilai, d.motorUnit, d.motorNilai,
       d.statusTempat, d.nilaiAsetTempat, d.keteranganTempat
@@ -1165,6 +1214,8 @@ function doGet(e) {
         noUB: document.getElementById('noUB').value.trim(),
         jmlAnggota: document.getElementById('jmlAnggota').value,
         noTlp: document.getElementById('noTlp').value.trim(),
+        ijasahKK: document.getElementById('ijasahKK').value,
+        bpjs: document.getElementById('bpjs').value,
         fotoKK: cbVal('cbFotoKK'),
         geotagging: cbVal('cbGeotagging'),
         fotoRuang: cbVal('cbFotoRuang'),
@@ -1186,8 +1237,9 @@ function doGet(e) {
         karyawanUpah: document.getElementById('karyawanUpah').value.trim(),
         lokasiUsaha: document.getElementById('lokasiUsaha').value.trim(),
         noNIB: document.getElementById('noNIB').value.trim(),
-        mkn7Hari: document.getElementById('mkn7Hari').value,
-        nonMkn: document.getElementById('nonMkn').value,
+        mingguan: document.getElementById('mingguan').value,
+        bulanan: document.getElementById('bulanan').value,
+        tahunan: document.getElementById('tahunan').value,
         internet: document.getElementById('internet').value,
         listrik: document.getElementById('listrik').value,
         kulkas: cbVal('cbKulkas'),
@@ -1258,6 +1310,8 @@ function doGet(e) {
       document.getElementById('r-noUB').textContent = d.noUB || '-';
       document.getElementById('r-jmlAnggota').textContent = d.jmlAnggota ? d.jmlAnggota + ' Orang' : '-';
       document.getElementById('r-noTlp').textContent = d.noTlp || '-';
+      document.getElementById('r-ijasahKK').textContent = d.ijasahKK || '-';
+      document.getElementById('r-bpjs').textContent = d.bpjs || '-';
 
       // Kelistrikan
       document.getElementById('r-noMeter').textContent = d.noMeter || '-';
@@ -1300,6 +1354,13 @@ function doGet(e) {
       } else {
         document.getElementById('r-sec-usaha').style.display = 'none';
       }
+
+      // Pengeluaran
+      document.getElementById('r-mingguan').textContent = formatRupiah(d.mingguan);
+      document.getElementById('r-bulanan').textContent = formatRupiah(d.bulanan);
+      document.getElementById('r-tahunan').textContent = formatRupiah(d.tahunan);
+      document.getElementById('r-internet').textContent = formatRupiah(d.internet);
+      document.getElementById('r-listrik').textContent = formatRupiah(d.listrik);
 
       // Aset & Tempat Tinggal
       document.getElementById('r-statusTempat').textContent = d.statusTempat || '-';

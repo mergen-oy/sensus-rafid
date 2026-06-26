@@ -1,0 +1,1416 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+  <title>Form Pendataan Keluarga</title>
+  <!-- html2canvas untuk ekspor gambar -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <style>
+    :root {
+      --primary: #6c3fc5;
+      --accent: #f97316;
+      --danger: #e53e3e;
+      --success: #16a34a;
+      --bg: #fdf4e7;
+      --card: #ffffff;
+      --section-bg: #f9f0e0;
+      --border: #d5c8b4;
+      --text: #1a1a1a;
+      --label: #2d2d2d;
+      --muted: #888;
+      --radius: 10px;
+      --shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      padding: 0 0 80px;
+    }
+
+    /* ── HEADER ── */
+    .app-header {
+      background: var(--primary);
+      color: white;
+      padding: 16px 20px;
+      text-align: center;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    }
+
+    .app-header h1 {
+      font-size: 16px;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+    }
+
+    .app-header p {
+      font-size: 12px;
+      opacity: 0.8;
+      margin-top: 2px;
+    }
+
+    /* ── CONTAINER ── */
+    .container {
+      max-width: 600px;
+      margin: 0 auto;
+      padding: 16px;
+    }
+
+    /* ── SECTION ── */
+    .section {
+      background: var(--card);
+      border-radius: var(--radius);
+      margin-bottom: 14px;
+      box-shadow: var(--shadow);
+      overflow: hidden;
+      border: 1px solid var(--border);
+    }
+
+    .section-header {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 16px;
+      background: var(--section-bg);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .section-header .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--primary);
+      flex-shrink: 0;
+    }
+
+    .section-header span {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--primary);
+      letter-spacing: 0.8px;
+      text-transform: uppercase;
+    }
+
+    .section-body {
+      padding: 12px 16px 16px;
+    }
+
+    /* ── GRID ── */
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .grid-3 {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 8px;
+    }
+
+    .col-span-2 {
+      grid-column: span 2;
+    }
+
+    /* ── FIELD ── */
+    .field {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .field label {
+      font-size: 10px;
+      font-weight: 700;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .field input,
+    .field select,
+    .field textarea {
+      border: 1.5px solid var(--border);
+      border-radius: 6px;
+      padding: 8px 10px;
+      font-size: 14px;
+      color: var(--text);
+      background: #fafafa;
+      transition: border-color 0.2s, background 0.2s;
+      width: 100%;
+    }
+
+    .field input:focus,
+    .field select:focus {
+      outline: none;
+      border-color: var(--primary);
+      background: #fff;
+    }
+
+    .field input[type="number"] {
+      text-align: right;
+    }
+
+    .field input::placeholder {
+      color: #bbb;
+    }
+
+    /* ── WARNING ── */
+    .field-warning label {
+      color: var(--danger);
+    }
+
+    .field-warning input {
+      border-color: #fca5a5;
+      background: #fff5f5;
+    }
+
+    .field-warning input:focus {
+      border-color: var(--danger);
+    }
+
+    .warning-badge {
+      font-size: 9px;
+      font-weight: 800;
+      color: var(--danger);
+      letter-spacing: 1px;
+      margin-top: 2px;
+    }
+
+    /* ── CHECKBOX GRID ── */
+    .checkbox-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin: 10px 0;
+    }
+
+    .checkbox-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: #fafafa;
+      border: 1.5px solid var(--border);
+      border-radius: 7px;
+      padding: 8px 10px;
+      cursor: pointer;
+      transition: all 0.15s;
+      user-select: none;
+    }
+
+    .checkbox-item:hover {
+      border-color: var(--primary);
+      background: #f3effe;
+    }
+
+    .checkbox-item input[type="checkbox"] {
+      display: none;
+    }
+
+    .cb-box {
+      width: 16px;
+      height: 16px;
+      border: 2px solid #ccc;
+      border-radius: 3px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      transition: all 0.15s;
+    }
+
+    .checkbox-item.checked .cb-box {
+      background: var(--primary);
+      border-color: var(--primary);
+    }
+
+    .checkbox-item.checked .cb-box::after {
+      content: '✓';
+      color: white;
+      font-size: 10px;
+      font-weight: 700;
+      line-height: 1;
+    }
+
+    .cb-label {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--label);
+      line-height: 1.2;
+    }
+
+    .checkbox-item.checked .cb-label {
+      color: var(--primary);
+    }
+
+    /* ── DIVIDER ── */
+    .divider {
+      height: 1px;
+      background: var(--border);
+      margin: 12px 0;
+    }
+
+    /* ── SPACER ── */
+    .mt-10 {
+      margin-top: 10px;
+    }
+
+    /* ── RUPIAH HINT ── */
+    .rp-hint {
+      font-size: 10px;
+      color: var(--muted);
+      margin-top: 2px;
+    }
+
+    /* ── BUTTON ── */
+    .btn-submit {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      padding: 10px 16px 16px;
+      background: linear-gradient(to top, var(--bg) 80%, transparent);
+      z-index: 50;
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+    }
+
+    .btn-submit button {
+      flex: 1;
+      max-width: 290px;
+      padding: 14px 10px;
+      border: none;
+      border-radius: 12px;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      box-shadow: 0 4px 15px rgba(108, 63, 197, 0.25);
+      transition: all 0.2s;
+    }
+
+    .btn-submit button.btn-primary {
+      background: var(--primary);
+      color: white;
+    }
+
+    .btn-submit button.btn-secondary {
+      background: var(--card);
+      color: var(--primary);
+      border: 2px solid var(--primary);
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+    }
+
+    .btn-submit button:hover {
+      filter: brightness(1.1);
+      transform: translateY(-1px);
+    }
+
+    .btn-submit button:disabled {
+      background: #aaa;
+      box-shadow: none;
+      transform: none;
+      cursor: not-allowed;
+    }
+
+    /* ── STYLING BUKTI PENDATAAN (RECEIPT CARD) UNTUK JPG ── */
+    #receipt-card {
+      position: absolute;
+      left: -9999px;
+      top: 0;
+      width: 450px;
+      background: #fdf4e7;
+      padding: 24px;
+      border-radius: 16px;
+      box-sizing: border-box;
+      color: #1a1a1a;
+    }
+
+    .receipt-container {
+      background: #ffffff;
+      border: 1px solid #d5c8b4;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    }
+
+    .receipt-header {
+      background: linear-gradient(135deg, #6c3fc5 0%, #f97316 100%);
+      color: white;
+      padding: 20px;
+      text-align: center;
+    }
+
+    .receipt-header h2 {
+      font-size: 18px;
+      font-weight: 700;
+      margin-bottom: 4px;
+      letter-spacing: 0.5px;
+    }
+
+    .receipt-header p {
+      font-size: 12px;
+      opacity: 0.9;
+    }
+
+    .receipt-body {
+      padding: 20px;
+    }
+
+    .receipt-section {
+      margin-bottom: 18px;
+    }
+
+    .receipt-section-title {
+      font-size: 11px;
+      font-weight: 800;
+      color: #6c3fc5;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      margin-bottom: 8px;
+      border-bottom: 1.5px dashed #d5c8b4;
+      padding-bottom: 4px;
+    }
+
+    .receipt-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 6px;
+    }
+
+    .receipt-row {
+      display: flex;
+      justify-content: space-between;
+      font-size: 12px;
+      line-height: 1.4;
+    }
+
+    .receipt-label {
+      color: #888;
+      font-weight: 600;
+    }
+
+    .receipt-value {
+      color: #1a1a1a;
+      font-weight: 700;
+      text-align: right;
+    }
+
+    .receipt-checkbox-list {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 6px;
+      margin-top: 8px;
+    }
+
+    .receipt-checkbox-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 11px;
+      font-weight: 700;
+    }
+
+    .receipt-checkbox-item.checked {
+      color: #16a34a;
+    }
+
+    .receipt-checkbox-item.unchecked {
+      color: #e53e3e;
+      opacity: 0.7;
+    }
+
+    .receipt-footer {
+      text-align: center;
+      padding: 16px;
+      background: #f9f0e0;
+      border-top: 1px solid #d5c8b4;
+      font-size: 11px;
+      color: #888;
+      font-weight: 600;
+    }
+
+    /* ── TOAST NOTIFIKASI ── */
+    .toast {
+      display: none;
+      position: fixed;
+      top: 70px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 999;
+      padding: 12px 20px;
+      border-radius: 10px;
+      font-size: 14px;
+      font-weight: 600;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+      min-width: 250px;
+      text-align: center;
+      animation: slideDown 0.3s ease;
+    }
+
+    @keyframes slideDown {
+      from {
+        opacity: 0;
+        transform: translateX(-50%) translateY(-10px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateX(-50%) translateY(0);
+      }
+    }
+
+    .toast.sukses {
+      background: #dcfce7;
+      color: #15803d;
+      border: 1.5px solid #86efac;
+      display: block;
+    }
+
+    .toast.error {
+      background: #fee2e2;
+      color: #dc2626;
+      border: 1.5px solid #fca5a5;
+      display: block;
+    }
+
+    .toast.loading {
+      background: #eff6ff;
+      color: #1d4ed8;
+      border: 1.5px solid #93c5fd;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .spinner {
+      width: 16px;
+      height: 16px;
+      border: 2px solid #93c5fd;
+      border-top-color: #1d4ed8;
+      border-radius: 50%;
+      animation: spin 0.7s linear infinite;
+      flex-shrink: 0;
+    }
+
+    @keyframes spin {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    /* ── MODAL SUKSES ── */
+    .overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.5);
+      z-index: 200;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .overlay.show {
+      display: flex;
+    }
+
+    .modal {
+      background: white;
+      border-radius: 16px;
+      padding: 28px 24px;
+      text-align: center;
+      max-width: 320px;
+      width: 100%;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+    }
+
+    .modal .icon {
+      font-size: 48px;
+      margin-bottom: 12px;
+    }
+
+    .modal h2 {
+      font-size: 18px;
+      color: var(--success);
+      margin-bottom: 8px;
+    }
+
+    .modal p {
+      font-size: 14px;
+      color: var(--muted);
+      line-height: 1.5;
+    }
+
+    .modal .modal-actions {
+      display: flex;
+      gap: 10px;
+      margin-top: 20px;
+    }
+
+    .modal .modal-actions button {
+      flex: 1;
+      padding: 12px;
+      border: none;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+
+    .btn-reset {
+      background: #f3f4f6;
+      color: #374151;
+    }
+
+    .btn-reset:hover {
+      background: #e5e7eb;
+    }
+
+    .btn-ok {
+      background: var(--primary);
+      color: white;
+    }
+
+    .btn-ok:hover {
+      filter: brightness(1.1);
+    }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 400px) {
+      .grid-3 {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .app-header h1 {
+        font-size: 14px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- HEADER -->
+  <div class="app-header">
+    <h1>📋 FORM PENDATAAN KELUARGA</h1>
+    <p>Isi semua data dengan lengkap dan benar</p>
+  </div>
+
+  <div class="container">
+
+    <!-- ══ KELUARGA ══ -->
+    <div class="section">
+      <div class="section-header">
+        <div class="dot"></div><span>Keluarga</span>
+      </div>
+      <div class="section-body">
+
+        <div class="grid-2">
+          <div class="field col-span-2">
+            <label>SLS</label>
+            <input type="text" id="sls" placeholder="Satuan Lingkungan Setempat">
+          </div>
+          <div class="field">
+            <label>Nama Kepala Keluarga</label>
+            <input type="text" id="namaKK" placeholder="Tulis nama lengkap">
+          </div>
+          <div class="field">
+            <label>No. UB</label>
+            <input type="text" id="noUB" placeholder="Nomor UB">
+          </div>
+          <div class="field">
+            <label>Jml Anggota Keluarga</label>
+            <input type="number" id="jmlAnggota" placeholder="0" min="1">
+          </div>
+          <div class="field field-warning">
+            <label>No. TLP / WA ⚠</label>
+            <input type="tel" id="noTlp" placeholder="08xx-xxxx-xxxx">
+            <span class="warning-badge">⚠ AWAS LUPA</span>
+          </div>
+        </div>
+
+        <div class="divider"></div>
+
+        <!-- CHECKBOXES -->
+        <div
+          style="font-size:11px; font-weight:700; color:var(--muted); text-transform:uppercase; letter-spacing:0.5px; margin-bottom:6px;">
+          Dokumentasi</div>
+        <div class="checkbox-grid">
+          <div class="checkbox-item" onclick="toggleCb(this,'cbFotoKK')">
+            <input type="checkbox" id="cbFotoKK">
+            <div class="cb-box"></div>
+            <span class="cb-label">Foto KK</span>
+          </div>
+          <div class="checkbox-item" onclick="toggleCb(this,'cbGeotagging')">
+            <input type="checkbox" id="cbGeotagging">
+            <div class="cb-box"></div>
+            <span class="cb-label">Geotagging</span>
+          </div>
+          <div class="checkbox-item" onclick="toggleCb(this,'cbFotoRuang')">
+            <input type="checkbox" id="cbFotoRuang">
+            <div class="cb-box"></div>
+            <span class="cb-label">Foto Ruang Tamu</span>
+          </div>
+          <div class="checkbox-item" onclick="toggleCb(this,'cbFotoDepan')">
+            <input type="checkbox" id="cbFotoDepan">
+            <div class="cb-box"></div>
+            <span class="cb-label">Foto Depan Rmh</span>
+          </div>
+          <div class="checkbox-item" onclick="toggleCb(this,'cbFotoMeteran')">
+            <input type="checkbox" id="cbFotoMeteran">
+            <div class="cb-box"></div>
+            <span class="cb-label">Foto Meteran Listrik</span>
+          </div>
+        </div>
+
+        <div class="divider"></div>
+
+        <div class="grid-2">
+          <div class="field">
+            <label>No. Meter / ID</label>
+            <input type="text" id="noMeter" placeholder="No. Meter">
+          </div>
+          <div class="field">
+            <label>KWH Watt</label>
+            <input type="text" id="kwhWatt" placeholder="Contoh: 900">
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ══ PEKERJAAN ══ -->
+    <div class="section">
+      <div class="section-header">
+        <div class="dot"></div><span>Pekerjaan</span>
+      </div>
+      <div class="section-body">
+
+        <div class="grid-3">
+          <div class="field">
+            <label>KK</label>
+            <input type="text" id="pkKK" placeholder="Pekerjaan">
+          </div>
+          <div class="field">
+            <label>Istri</label>
+            <input type="text" id="pkIstri" placeholder="Pekerjaan">
+          </div>
+          <div class="field">
+            <label>Anak</label>
+            <input type="text" id="pkAnak" placeholder="Pekerjaan">
+          </div>
+        </div>
+
+        <div class="divider"></div>
+
+        <div
+          style="font-size:11px; font-weight:700; color:var(--muted); text-transform:uppercase; letter-spacing:0.5px; margin-bottom:8px;">
+          Gaji / Penghasilan</div>
+        <div class="grid-3">
+          <div class="field">
+            <label>Gaji KK</label>
+            <input type="number" id="gajiKK" placeholder="0">
+          </div>
+          <div class="field">
+            <label>Gaji Istri</label>
+            <input type="number" id="gajiIstri" placeholder="0">
+          </div>
+          <div class="field">
+            <label>Gaji Anak</label>
+            <input type="number" id="gajiAnak" placeholder="0">
+          </div>
+        </div>
+        <p class="rp-hint">💡 Isi dalam Rupiah (tanpa titik/koma)</p>
+
+      </div>
+    </div>
+
+    <!-- ══ USAHA ══ -->
+    <div class="section">
+      <div class="section-header">
+        <div class="dot"></div><span>Usaha</span>
+      </div>
+      <div class="section-body">
+
+        <div class="grid-3">
+          <div class="field">
+            <label>Jenis Usaha</label>
+            <input type="text" id="usahaJenis" placeholder="Jenis">
+          </div>
+          <div class="field">
+            <label>Tahun Mulai</label>
+            <input type="number" id="usahaTahun" placeholder="2020">
+          </div>
+          <div class="field">
+            <label>Modal (Rp)</label>
+            <input type="number" id="usahaModal" placeholder="0">
+          </div>
+        </div>
+
+        <div class="grid-3 mt-10">
+          <div class="field">
+            <label>Biaya Produksi</label>
+            <input type="number" id="biayaProduksi" placeholder="0">
+          </div>
+          <div class="field">
+            <label>Pendapatan</label>
+            <input type="number" id="pendapatan" placeholder="0">
+          </div>
+          <div class="field">
+            <label>Karyawan / Upah</label>
+            <input type="text" id="karyawanUpah" placeholder="Jml / Upah">
+          </div>
+        </div>
+
+        <div class="grid-2 mt-10">
+          <div class="field">
+            <label>Lokasi Usaha</label>
+            <input type="text" id="lokasiUsaha" placeholder="Alamat usaha">
+          </div>
+          <div class="field">
+            <label>No. NIB</label>
+            <input type="text" id="noNIB" placeholder="Nomor NIB">
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ══ PENGELUARAN ══ -->
+    <div class="section">
+      <div class="section-header">
+        <div class="dot"></div><span>Pengeluaran</span>
+      </div>
+      <div class="section-body">
+
+        <div class="grid-3">
+          <div class="field">
+            <label>Mkn 7 Hari (Rp)</label>
+            <input type="number" id="mkn7Hari" placeholder="0">
+          </div>
+          <div class="field">
+            <label>Non Mkn (Rp)</label>
+            <input type="number" id="nonMkn" placeholder="0">
+          </div>
+          <div class="field">
+            <label>Internet (Rp)</label>
+            <input type="number" id="internet" placeholder="0">
+          </div>
+        </div>
+
+        <div class="grid-2 mt-10">
+          <div class="field">
+            <label>Listrik (Rp)</label>
+            <input type="number" id="listrik" placeholder="0">
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ══ ASET ══ -->
+    <div class="section">
+      <div class="section-header">
+        <div class="dot"></div><span>Aset</span>
+      </div>
+      <div class="section-body">
+
+        <div
+          style="font-size:11px; font-weight:700; color:var(--muted); text-transform:uppercase; letter-spacing:0.5px; margin-bottom:6px;">
+          Aset Elektronik / Rumah Tangga</div>
+        <div class="checkbox-grid">
+          <div class="checkbox-item" onclick="toggleCb(this,'cbKulkas')">
+            <input type="checkbox" id="cbKulkas">
+            <div class="cb-box"></div>
+            <span class="cb-label">Kulkas</span>
+          </div>
+          <div class="checkbox-item" onclick="toggleCb(this,'cbAC')">
+            <input type="checkbox" id="cbAC">
+            <div class="cb-box"></div>
+            <span class="cb-label">AC</span>
+          </div>
+          <div class="checkbox-item" onclick="toggleCb(this,'cbLaptop')">
+            <input type="checkbox" id="cbLaptop">
+            <div class="cb-box"></div>
+            <span class="cb-label">Laptop / PC</span>
+          </div>
+          <div class="checkbox-item" onclick="toggleCb(this,'cbGas')">
+            <input type="checkbox" id="cbGas">
+            <div class="cb-box"></div>
+            <span class="cb-label">Gas 3KG / 5KG</span>
+          </div>
+        </div>
+
+        <div class="divider"></div>
+
+        <div
+          style="font-size:11px; font-weight:700; color:var(--muted); text-transform:uppercase; letter-spacing:0.5px; margin-bottom:8px;">
+          Nilai Aset Berharga</div>
+        <div class="grid-3">
+          <div class="field">
+            <label>Emas (gram)</label>
+            <input type="number" id="emasGram" placeholder="0">
+          </div>
+          <div class="field">
+            <label>Nilai Emas (Rp)</label>
+            <input type="number" id="emasNilai" placeholder="0">
+          </div>
+          <div class="field"></div>
+          <div class="field">
+            <label>Mobil (unit)</label>
+            <input type="number" id="mobilUnit" placeholder="0">
+          </div>
+          <div class="field">
+            <label>Nilai Mobil (Rp)</label>
+            <input type="number" id="mobilNilai" placeholder="0">
+          </div>
+          <div class="field"></div>
+          <div class="field">
+            <label>Motor (unit)</label>
+            <input type="number" id="motorUnit" placeholder="0">
+          </div>
+          <div class="field">
+            <label>Nilai Motor (Rp)</label>
+            <input type="number" id="motorNilai" placeholder="0">
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ══ TEMPAT TINGGAL ══ -->
+    <div class="section">
+      <div class="section-header">
+        <div class="dot"></div><span>Tempat Tinggal</span>
+      </div>
+      <div class="section-body">
+
+        <div class="grid-3">
+          <div class="field">
+            <label>Status</label>
+            <select id="statusTempat">
+              <option value="">-- Pilih --</option>
+              <option value="Milik Sendiri">Milik Sendiri</option>
+              <option value="Sewa">Sewa</option>
+              <option value="Kontrak">Kontrak</option>
+              <option value="Numpang">Numpang</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>Nilai Aset (Rp)</label>
+            <input type="number" id="nilaiAsetTempat" placeholder="0">
+          </div>
+          <div class="field">
+            <label>Keterangan</label>
+            <input type="text" id="keteranganTempat" placeholder="Lainnya...">
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </div><!-- /container -->
+
+  <!-- TOMBOL SUBMIT STICKY -->
+  <div class="btn-submit">
+    <button id="btnKirim" class="btn-primary" onclick="kirimData()">📤 Simpan ke Sheets</button>
+    <button id="btnUnduh" class="btn-secondary" onclick="unduhJPG()">📥 Unduh JPG</button>
+  </div>
+
+  <!-- TOAST NOTIFIKASI -->
+  <div class="toast" id="toast"></div>
+
+  <!-- MODAL SUKSES -->
+  <div class="overlay" id="overlaySucc">
+    <div class="modal">
+      <div class="icon">✅</div>
+      <h2>Data Tersimpan!</h2>
+      <p>Data keluarga <strong id="namaKKModal">—</strong> berhasil dikirim ke Google Spreadsheet.</p>
+      <div class="modal-actions" style="margin-top: 16px;">
+        <button class="btn-ok" onclick="unduhJPG()" style="width: 100%; display: flex; align-items: center; justify-content: center; gap: 6px;">
+          <span>📥</span> Unduh JPG
+        </button>
+      </div>
+      <div class="modal-actions" style="margin-top: 8px;">
+        <button class="btn-reset" onclick="resetForm()">🔄 Baru</button>
+        <button class="btn-reset" style="border: 1px solid var(--border);" onclick="tutupModal()">Tutup</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- TEMPLATE BUKTI PENDATAAN (OFF-SCREEN UNTUK EXPORT JPG) -->
+  <div id="receipt-card">
+    <div class="receipt-container">
+      <div class="receipt-header">
+        <h2>BUKTI PENDATAAN KELUARGA</h2>
+        <p>Satuan Lingkungan Setempat (SLS)</p>
+        <p id="receipt-timestamp" style="margin-top: 6px; font-size: 10px; font-weight: bold;"></p>
+      </div>
+      <div class="receipt-body">
+        
+        <!-- KELUARGA -->
+        <div class="receipt-section">
+          <div class="receipt-section-title">🏠 Detail Keluarga</div>
+          <div class="receipt-grid">
+            <div class="receipt-row"><span class="receipt-label">Nama Kepala Keluarga:</span><span class="receipt-value" id="r-namaKK">-</span></div>
+            <div class="receipt-row"><span class="receipt-label">SLS:</span><span class="receipt-value" id="r-sls">-</span></div>
+            <div class="receipt-row"><span class="receipt-label">No. UB:</span><span class="receipt-value" id="r-noUB">-</span></div>
+            <div class="receipt-row"><span class="receipt-label">Jumlah Anggota:</span><span class="receipt-value" id="r-jmlAnggota">-</span></div>
+            <div class="receipt-row"><span class="receipt-label">No. TLP / WA:</span><span class="receipt-value" id="r-noTlp">-</span></div>
+          </div>
+        </div>
+
+        <!-- KELISTRIKAN & DOKUMENTASI -->
+        <div class="receipt-section">
+          <div class="receipt-section-title">⚡ Kelistrikan & Dokumentasi</div>
+          <div class="receipt-grid">
+            <div class="receipt-row"><span class="receipt-label">No. Meter / ID:</span><span class="receipt-value" id="r-noMeter">-</span></div>
+            <div class="receipt-row"><span class="receipt-label">KWH Watt:</span><span class="receipt-value" id="r-kwhWatt">-</span></div>
+          </div>
+          <div class="receipt-checkbox-list" id="r-docs-list">
+            <!-- Diisi via JS -->
+          </div>
+        </div>
+
+        <!-- PEKERJAAN & PENDAPATAN -->
+        <div class="receipt-section">
+          <div class="receipt-section-title">💼 Pekerjaan & Gaji</div>
+          <div class="receipt-grid">
+            <div class="receipt-row"><span class="receipt-label">Pekerjaan (KK/Ist/Ank):</span><span class="receipt-value" id="r-pekerjaan">-</span></div>
+            <div class="receipt-row"><span class="receipt-label">Gaji (KK/Ist/Ank):</span><span class="receipt-value" id="r-gaji">-</span></div>
+          </div>
+        </div>
+
+        <!-- USAHA -->
+        <div class="receipt-section" id="r-sec-usaha">
+          <div class="receipt-section-title">🛍️ Usaha Keluarga</div>
+          <div class="receipt-grid">
+            <div class="receipt-row"><span class="receipt-label">Jenis Usaha (Tahun):</span><span class="receipt-value" id="r-usahaJenisTahun">-</span></div>
+            <div class="receipt-row"><span class="receipt-label">Modal / Pendapatan:</span><span class="receipt-value" id="r-usahaKeuangan">-</span></div>
+            <div class="receipt-row"><span class="receipt-label">Lokasi Usaha / NIB:</span><span class="receipt-value" id="r-usahaLokasiNIB">-</span></div>
+          </div>
+        </div>
+
+        <!-- ASET & TEMPAT TINGGAL -->
+        <div class="receipt-section">
+          <div class="receipt-section-title">📦 Aset & Tempat Tinggal</div>
+          <div class="receipt-grid">
+            <div class="receipt-row"><span class="receipt-label">Status Tempat Tinggal:</span><span class="receipt-value" id="r-statusTempat">-</span></div>
+            <div class="receipt-row"><span class="receipt-label">Estimasi Nilai Aset:</span><span class="receipt-value" id="r-nilaiAset">-</span></div>
+          </div>
+          <div class="receipt-checkbox-list" id="r-assets-list">
+            <!-- Diisi via JS -->
+          </div>
+        </div>
+
+      </div>
+      <div class="receipt-footer">
+        <p>✔ DATA SUDAH TERVERIFIKASI & TERSIMPAN</p>
+        <p style="font-size: 9px; margin-top: 4px;">Aplikasi Pendataan Mandiri - Didukung oleh GitHub Pages</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════
+     KODE APPS SCRIPT — Pasang di Google Sheets
+     (lihat instruksi di bawah)
+════════════════════════════════════════════════ -->
+  <!--
+APPS SCRIPT (copy paste ke Extensions > Apps Script):
+
+function doPost(e) {
+  try {
+    var ss = SpreadsheetApp.getActiveSpreadsheet();
+    var sheet = ss.getSheetByName('Pendataan') || ss.getActiveSheet();
+
+    if (sheet.getLastRow() === 0) {
+      sheet.appendRow([
+        'Timestamp','SLS','Nama KK','No UB','Jml Anggota',
+        'No TLP/WA',
+        'Foto KK','Geotagging','Foto Ruang Tamu','Foto Depan Rmh','Foto Meteran',
+        'No Meter/ID','KWH Watt',
+        'Pekerjaan KK','Pekerjaan Istri','Pekerjaan Anak',
+        'Gaji KK','Gaji Istri','Gaji Anak',
+        'Usaha Jenis','Usaha Tahun','Modal','Biaya Produksi','Pendapatan','Karyawan/Upah',
+        'Lokasi Usaha','No NIB',
+        'MKN 7 Hari','Non MKN','Internet','Listrik',
+        'Kulkas','AC','Laptop/PC','Gas 3/5KG',
+        'Emas (gr)','Nilai Emas','Mobil (unit)','Nilai Mobil','Motor (unit)','Nilai Motor',
+        'Status Tempat','Nilai Aset Tempat','Keterangan Tempat'
+      ]);
+    }
+
+    var d = JSON.parse(e.postData.contents);
+    sheet.appendRow([
+      new Date().toLocaleString('id-ID'),
+      d.sls, d.namaKK, d.noUB, d.jmlAnggota, d.noTlp,
+      d.fotoKK, d.geotagging, d.fotoRuang, d.fotoDepan, d.fotoMeteran,
+      d.noMeter, d.kwhWatt,
+      d.pkKK, d.pkIstri, d.pkAnak,
+      d.gajiKK, d.gajiIstri, d.gajiAnak,
+      d.usahaJenis, d.usahaTahun, d.usahaModal, d.biayaProduksi, d.pendapatan, d.karyawanUpah,
+      d.lokasiUsaha, d.noNIB,
+      d.mkn7Hari, d.nonMkn, d.internet, d.listrik,
+      d.kulkas, d.ac, d.laptop, d.gas,
+      d.emasGram, d.emasNilai, d.mobilUnit, d.mobilNilai, d.motorUnit, d.motorNilai,
+      d.statusTempat, d.nilaiAsetTempat, d.keteranganTempat
+    ]);
+
+    return ContentService
+      .createTextOutput(JSON.stringify({status:'success'}))
+      .setMimeType(ContentService.MimeType.JSON);
+  } catch(err) {
+    return ContentService
+      .createTextOutput(JSON.stringify({status:'error', msg:err.toString()}))
+      .setMimeType(ContentService.MimeType.JSON);
+  }
+}
+
+function doGet(e) {
+  return ContentService
+    .createTextOutput(JSON.stringify({status:'ready'}))
+    .setMimeType(ContentService.MimeType.JSON);
+}
+-->
+
+  <script>
+    // ══ GANTI URL INI SETELAH DEPLOY APPS SCRIPT ══
+    const SCRIPT_URL = 'GANTI_DENGAN_URL_APPS_SCRIPT_WEB_APP';
+
+    // ── Toggle checkbox ──
+    function toggleCb(el, id) {
+      el.classList.toggle('checked');
+      document.getElementById(id).checked = el.classList.contains('checked');
+    }
+
+    // ── Ambil nilai checkbox ──
+    function cbVal(id) {
+      return document.getElementById(id).checked ? 'Ya' : 'Tidak';
+    }
+
+    // ── Tampilkan toast ──
+    let toastTimer;
+    function showToast(msg, type, duration = 3000) {
+      const t = document.getElementById('toast');
+      t.className = 'toast ' + type;
+      if (type === 'loading') {
+        t.innerHTML = `<div class="spinner"></div><span>${msg}</span>`;
+      } else {
+        t.textContent = msg;
+      }
+      clearTimeout(toastTimer);
+      if (duration > 0) toastTimer = setTimeout(() => { t.className = 'toast'; }, duration);
+    }
+
+    // ── Tutup modal ──
+    function tutupModal() {
+      document.getElementById('overlaySucc').classList.remove('show');
+    }
+
+    // ── Reset form ──
+    function resetForm() {
+      tutupModal();
+      // Reset semua input
+      document.querySelectorAll('input, select').forEach(el => {
+        if (el.type === 'checkbox') el.checked = false;
+        else el.value = '';
+      });
+      // Reset checkbox UI
+      document.querySelectorAll('.checkbox-item').forEach(el => el.classList.remove('checked'));
+      // Scroll ke atas
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // ── Validasi minimal ──
+    function validasi() {
+      const namaKK = document.getElementById('namaKK').value.trim();
+      const noTlp = document.getElementById('noTlp').value.trim();
+      if (!namaKK) {
+        showToast('⚠️ Nama Kepala Keluarga wajib diisi!', 'error');
+        document.getElementById('namaKK').focus();
+        return false;
+      }
+      if (!noTlp) {
+        showToast('⚠️ No. TLP/WA wajib diisi!', 'error');
+        document.getElementById('noTlp').focus();
+        return false;
+      }
+      return true;
+    }
+
+    // ── Kumpulkan semua data ──
+    function kumpulkanData() {
+      return {
+        sls: document.getElementById('sls').value.trim(),
+        namaKK: document.getElementById('namaKK').value.trim(),
+        noUB: document.getElementById('noUB').value.trim(),
+        jmlAnggota: document.getElementById('jmlAnggota').value,
+        noTlp: document.getElementById('noTlp').value.trim(),
+        fotoKK: cbVal('cbFotoKK'),
+        geotagging: cbVal('cbGeotagging'),
+        fotoRuang: cbVal('cbFotoRuang'),
+        fotoDepan: cbVal('cbFotoDepan'),
+        fotoMeteran: cbVal('cbFotoMeteran'),
+        noMeter: document.getElementById('noMeter').value.trim(),
+        kwhWatt: document.getElementById('kwhWatt').value.trim(),
+        pkKK: document.getElementById('pkKK').value.trim(),
+        pkIstri: document.getElementById('pkIstri').value.trim(),
+        pkAnak: document.getElementById('pkAnak').value.trim(),
+        gajiKK: document.getElementById('gajiKK').value,
+        gajiIstri: document.getElementById('gajiIstri').value,
+        gajiAnak: document.getElementById('gajiAnak').value,
+        usahaJenis: document.getElementById('usahaJenis').value.trim(),
+        usahaTahun: document.getElementById('usahaTahun').value,
+        usahaModal: document.getElementById('usahaModal').value,
+        biayaProduksi: document.getElementById('biayaProduksi').value,
+        pendapatan: document.getElementById('pendapatan').value,
+        karyawanUpah: document.getElementById('karyawanUpah').value.trim(),
+        lokasiUsaha: document.getElementById('lokasiUsaha').value.trim(),
+        noNIB: document.getElementById('noNIB').value.trim(),
+        mkn7Hari: document.getElementById('mkn7Hari').value,
+        nonMkn: document.getElementById('nonMkn').value,
+        internet: document.getElementById('internet').value,
+        listrik: document.getElementById('listrik').value,
+        kulkas: cbVal('cbKulkas'),
+        ac: cbVal('cbAC'),
+        laptop: cbVal('cbLaptop'),
+        gas: cbVal('cbGas'),
+        emasGram: document.getElementById('emasGram').value,
+        emasNilai: document.getElementById('emasNilai').value,
+        mobilUnit: document.getElementById('mobilUnit').value,
+        mobilNilai: document.getElementById('mobilNilai').value,
+        motorUnit: document.getElementById('motorUnit').value,
+        motorNilai: document.getElementById('motorNilai').value,
+        statusTempat: document.getElementById('statusTempat').value,
+        nilaiAsetTempat: document.getElementById('nilaiAsetTempat').value,
+        keteranganTempat: document.getElementById('keteranganTempat').value.trim(),
+      };
+    }
+
+    // ── KIRIM DATA ke Spreadsheet ──
+    async function kirimData() {
+      if (!validasi()) return;
+
+      if (SCRIPT_URL === 'GANTI_DENGAN_URL_APPS_SCRIPT_WEB_APP') {
+        showToast('⚙️ URL Apps Script belum diatur! Ikuti instruksi pemasangan.', 'error', 5000);
+        return;
+      }
+
+      const btn = document.getElementById('btnKirim');
+      btn.disabled = true;
+      showToast('Mengirim data...', 'loading', 0);
+
+      try {
+        const data = kumpulkanData();
+
+        await fetch(SCRIPT_URL, {
+          method: 'POST',
+          mode: 'no-cors',  // WAJIB untuk Apps Script
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(data)
+        });
+
+        // no-cors → tidak bisa baca response, anggap sukses
+        showToast('', 'hidden', 0);
+        document.getElementById('namaKKModal').textContent = data.namaKK || '—';
+        document.getElementById('overlaySucc').classList.add('show');
+
+      } catch (err) {
+        showToast('❌ Gagal mengirim. Periksa koneksi internet.', 'error');
+        console.error(err);
+      } finally {
+        btn.disabled = false;
+      }
+    }
+
+    // ── Format Angka ke Rupiah ──
+    function formatRupiah(angka) {
+      if (!angka || isNaN(angka) || angka === '') return 'Rp 0';
+      return 'Rp ' + parseInt(angka).toLocaleString('id-ID');
+    }
+
+    // ── Isi Data ke Template Bukti Pendataan ──
+    function populateReceiptCard(d) {
+      document.getElementById('receipt-timestamp').textContent = new Date().toLocaleString('id-ID', { dateStyle: 'long', timeStyle: 'short' });
+      
+      // Keluarga
+      document.getElementById('r-namaKK').textContent = d.namaKK || '-';
+      document.getElementById('r-sls').textContent = d.sls || '-';
+      document.getElementById('r-noUB').textContent = d.noUB || '-';
+      document.getElementById('r-jmlAnggota').textContent = d.jmlAnggota ? d.jmlAnggota + ' Orang' : '-';
+      document.getElementById('r-noTlp').textContent = d.noTlp || '-';
+
+      // Kelistrikan
+      document.getElementById('r-noMeter').textContent = d.noMeter || '-';
+      document.getElementById('r-kwhWatt').textContent = d.kwhWatt ? d.kwhWatt + ' Watt' : '-';
+
+      // Dokumentasi Checkboxes
+      const docsList = document.getElementById('r-docs-list');
+      docsList.innerHTML = '';
+      const docLabels = {
+        'Foto KK': document.getElementById('cbFotoKK').checked,
+        'Geotagging': document.getElementById('cbGeotagging').checked,
+        'Foto Ruang': document.getElementById('cbFotoRuang').checked,
+        'Foto Depan': document.getElementById('cbFotoDepan').checked,
+        'Foto Meteran': document.getElementById('cbFotoMeteran').checked
+      };
+      for (const [name, checked] of Object.entries(docLabels)) {
+        const item = document.createElement('div');
+        item.className = 'receipt-checkbox-item ' + (checked ? 'checked' : 'unchecked');
+        item.innerHTML = `<span>${checked ? '✓' : '✗'}</span> ${name}`;
+        docsList.appendChild(item);
+      }
+
+      // Pekerjaan
+      const pkKK = d.pkKK || '-';
+      const pkIstri = d.pkIstri || '-';
+      const pkAnak = d.pkAnak || '-';
+      document.getElementById('r-pekerjaan').textContent = `${pkKK} / ${pkIstri} / ${pkAnak}`;
+
+      const gKK = formatRupiah(d.gajiKK);
+      const gIstri = formatRupiah(d.gajiIstri);
+      const gAnak = formatRupiah(d.gajiAnak);
+      document.getElementById('r-gaji').textContent = `${gKK} / ${gIstri} / ${gAnak}`;
+
+      // Usaha
+      if (d.usahaJenis || d.usahaTahun || d.usahaModal || d.pendapatan) {
+        document.getElementById('r-sec-usaha').style.display = 'block';
+        document.getElementById('r-usahaJenisTahun').textContent = `${d.usahaJenis || '-'} (${d.usahaTahun || '-'})`;
+        document.getElementById('r-usahaKeuangan').textContent = `${formatRupiah(d.usahaModal)} / ${formatRupiah(d.pendapatan)}`;
+        document.getElementById('r-usahaLokasiNIB').textContent = `${d.lokasiUsaha || '-'} / NIB: ${d.noNIB || '-'}`;
+      } else {
+        document.getElementById('r-sec-usaha').style.display = 'none';
+      }
+
+      // Aset & Tempat Tinggal
+      document.getElementById('r-statusTempat').textContent = d.statusTempat || '-';
+      document.getElementById('r-nilaiAset').textContent = formatRupiah(d.nilaiAsetTempat);
+
+      // Aset Checkboxes
+      const assetsList = document.getElementById('r-assets-list');
+      assetsList.innerHTML = '';
+      const assetLabels = {
+        'Kulkas': document.getElementById('cbKulkas').checked,
+        'AC': document.getElementById('cbAC').checked,
+        'Laptop': document.getElementById('cbLaptop').checked,
+        'Gas': document.getElementById('cbGas').checked
+      };
+      for (const [name, checked] of Object.entries(assetLabels)) {
+        const item = document.createElement('div');
+        item.className = 'receipt-checkbox-item ' + (checked ? 'checked' : 'unchecked');
+        item.innerHTML = `<span>${checked ? '✓' : '✗'}</span> ${name}`;
+        assetsList.appendChild(item);
+      }
+    }
+
+    // ── Ekspor Struk Gambar JPG ──
+    async function unduhJPG() {
+      if (!validasi()) return;
+
+      showToast('Memproses gambar JPG...', 'loading', 0);
+
+      try {
+        const data = kumpulkanData();
+        populateReceiptCard(data);
+
+        // Beri jeda agar DOM diperbarui secara visual
+        await new Promise(resolve => setTimeout(resolve, 300));
+
+        const card = document.getElementById('receipt-card');
+        
+        const canvas = await html2canvas(card, {
+          scale: 2, // Resolusi tinggi agar hasil gambar tajam
+          useCORS: true,
+          backgroundColor: '#fdf4e7',
+          logging: false
+        });
+
+        // Simpan dalam format JPG
+        const link = document.createElement('a');
+        const cleanName = data.namaKK.replace(/[^a-zA-Z0-9]/g, '_');
+        link.download = `Bukti_Pendataan_${cleanName}.jpg`;
+        link.href = canvas.toDataURL('image/jpeg', 0.95);
+        link.click();
+
+        showToast('✅ Gambar JPG berhasil diunduh!', 'sukses');
+      } catch (err) {
+        showToast('❌ Gagal mengekspor gambar.', 'error');
+        console.error(err);
+      }
+    }
+  </script>
+
+  <!-- ══════════════════════════════════════════════
+📋 CARA MEMASANG KE GOOGLE SPREADSHEET & DEPLOY GITHUB
+
+PANDUAN A — Menghubungkan Google Spreadsheet:
+LANGKAH 1 — Buka Google Spreadsheet baru:
+  → Buka sheets.new di browser
+  → Beri nama sheet: "Pendataan Keluarga"
+  → Rename tab bawah menjadi: Pendataan
+
+LANGKAH 2 — Buka Apps Script:
+  → Klik menu: Extensions → Apps Script
+  → Hapus semua kode yang ada
+  → Copy kode di dalam komentar APPS SCRIPT di file ini
+  → Paste ke Apps Script
+  → Klik 💾 Save (Ctrl+S)
+
+LANGKAH 3 — Deploy sebagai Web App:
+  → Klik "Deploy" → "New deployment"
+  → Klik ⚙️ di sebelah "Select type" → pilih "Web app"
+  → Execute as: Me
+  → Who has access: Anyone ← WAJIB
+  → Klik "Deploy" → Authorize → Allow
+
+LANGKAH 4 — Pasang URL:
+  → Copy URL yang muncul
+  → Buka file HTML ini dengan text editor
+  → Cari: const SCRIPT_URL = 'GANTI_...'
+  → Ganti dengan URL yang dicopy
+
+PANDUAN B — Deploy ke GitHub (GitHub Pages) secara Gratis:
+LANGKAH 1 — Persiapan File:
+  → Pastikan nama file ini diubah menjadi 'index.html' (huruf kecil semua, agar dikenali GitHub sebagai halaman utama).
+
+LANGKAH 2 — Unggah ke GitHub:
+  → Buka github.com dan masuk ke akun Anda.
+  → Buat repositori baru (misalnya dengan nama 'form-pendataan'). Setel repositori ke 'Public'.
+  → Unggah file 'index.html' tersebut ke dalam repositori Anda.
+
+LANGKAH 3 — Aktifkan GitHub Pages:
+  → Buka menu 'Settings' pada repositori baru Anda di GitHub.
+  → Klik menu 'Pages' di bagian sidebar kiri.
+  → Pada bagian 'Build and deployment', cari pengaturan 'Branch'. Setel ke branch 'main' (atau 'master') dan folder ke '/ (root)'.
+  → Klik 'Save'.
+
+LANGKAH 4 — Selesai & Akses Link:
+  → Tunggu sekitar 1-2 menit untuk proses deploy selesai.
+  → Refresh halaman Settings > Pages tersebut. Anda akan melihat tautan situs web Anda yang siap dibagikan (misalnya: https://namauser.github.io/form-pendataan/).
+  → Orang-orang kini bisa mengisi formulir tersebut dari perangkat mobile mereka secara langsung!
+
+⚠️ Butuh koneksi internet saat mengirim data ke Spreadsheet.
+════════════════════════════════════════════════ -->
+
+</body>
+
+</html>

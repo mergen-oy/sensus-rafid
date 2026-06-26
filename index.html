@@ -604,6 +604,121 @@
         font-size: 14px;
       }
     }
+
+    /* ── FOTO UPLOAD KOMPONEN ── */
+    .foto-upload-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin: 10px 0;
+    }
+
+    .foto-upload-item {
+      background: #fafafa;
+      border: 1.5px solid var(--border);
+      border-radius: 10px;
+      overflow: hidden;
+      transition: border-color 0.2s;
+    }
+
+    .foto-upload-item.has-photo {
+      border-color: var(--success);
+    }
+
+    .foto-upload-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 12px;
+    }
+
+    .foto-upload-label {
+      flex: 1;
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--label);
+    }
+
+    .foto-upload-status {
+      font-size: 10px;
+      font-weight: 700;
+      color: var(--muted);
+      background: #eee;
+      padding: 3px 8px;
+      border-radius: 20px;
+    }
+
+    .foto-upload-item.has-photo .foto-upload-status {
+      background: #dcfce7;
+      color: var(--success);
+    }
+
+    .foto-btn-group {
+      display: flex;
+      gap: 6px;
+      padding: 0 12px 10px;
+    }
+
+    .btn-foto-ambil {
+      flex: 1;
+      padding: 9px 6px;
+      background: var(--primary);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+      transition: filter 0.2s;
+    }
+
+    .btn-foto-ambil:hover {
+      filter: brightness(1.1);
+    }
+
+    .btn-foto-simpan {
+      padding: 9px 10px;
+      background: var(--success);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      display: none;
+      align-items: center;
+      gap: 4px;
+      white-space: nowrap;
+      transition: filter 0.2s;
+    }
+
+    .btn-foto-simpan:hover {
+      filter: brightness(1.1);
+    }
+
+    .btn-foto-simpan.visible {
+      display: flex;
+    }
+
+    .foto-preview {
+      display: none;
+      width: 100%;
+      max-height: 160px;
+      object-fit: cover;
+      border-top: 1px solid var(--border);
+    }
+
+    .foto-preview.visible {
+      display: block;
+    }
+
+    .foto-input-hidden {
+      display: none;
+    }
   </style>
 </head>
 
@@ -674,30 +789,81 @@
 
         <div class="divider"></div>
 
-        <!-- CHECKBOXES -->
+        <!-- FOTO UPLOAD -->
         <div
-          style="font-size:11px; font-weight:700; color:var(--muted); text-transform:uppercase; letter-spacing:0.5px; margin-bottom:6px;">
-          Dokumentasi</div>
-        <div class="checkbox-grid">
-          <div class="checkbox-item" onclick="toggleCb(this,'cbFotoKK')">
-            <input type="checkbox" id="cbFotoKK">
-            <div class="cb-box"></div>
-            <span class="cb-label">Foto KK</span>
+          style="font-size:11px; font-weight:700; color:var(--muted); text-transform:uppercase; letter-spacing:0.5px; margin-bottom:8px;">
+          📷 Lampiran Foto Wajib</div>
+
+        <div class="foto-upload-grid">
+
+          <!-- Foto KK -->
+          <div class="foto-upload-item" id="wrap-fotoKK">
+            <div class="foto-upload-header">
+              <span class="foto-upload-label">📄 Kartu Keluarga (KK)</span>
+              <span class="foto-upload-status" id="status-fotoKK">Belum difoto</span>
+            </div>
+            <div class="foto-btn-group">
+              <button class="btn-foto-ambil" onclick="ambilFoto('fotoKK')">
+                📷 Ambil / Pilih Foto
+              </button>
+              <button class="btn-foto-simpan" id="simpan-fotoKK" onclick="simpanFotoGaleri('fotoKK', 'Foto_KK')">
+                💾 Simpan
+              </button>
+            </div>
+            <img class="foto-preview" id="preview-fotoKK" alt="Preview KK">
+            <input type="file" id="fotoKK" class="foto-input-hidden" accept="image/*" capture="environment"
+              onchange="onFotoChange('fotoKK', 'Foto KK')">
           </div>
+
+          <!-- Foto Ruang Tamu -->
+          <div class="foto-upload-item" id="wrap-fotoRuang">
+            <div class="foto-upload-header">
+              <span class="foto-upload-label">🛋️ Ruang Tamu</span>
+              <span class="foto-upload-status" id="status-fotoRuang">Belum difoto</span>
+            </div>
+            <div class="foto-btn-group">
+              <button class="btn-foto-ambil" onclick="ambilFoto('fotoRuang')">
+                📷 Ambil / Pilih Foto
+              </button>
+              <button class="btn-foto-simpan" id="simpan-fotoRuang" onclick="simpanFotoGaleri('fotoRuang', 'Foto_Ruang_Tamu')">
+                💾 Simpan
+              </button>
+            </div>
+            <img class="foto-preview" id="preview-fotoRuang" alt="Preview Ruang Tamu">
+            <input type="file" id="fotoRuang" class="foto-input-hidden" accept="image/*" capture="environment"
+              onchange="onFotoChange('fotoRuang', 'Foto Ruang Tamu')">
+          </div>
+
+          <!-- Foto Depan Rumah -->
+          <div class="foto-upload-item" id="wrap-fotoDepan">
+            <div class="foto-upload-header">
+              <span class="foto-upload-label">🏠 Depan Rumah</span>
+              <span class="foto-upload-status" id="status-fotoDepan">Belum difoto</span>
+            </div>
+            <div class="foto-btn-group">
+              <button class="btn-foto-ambil" onclick="ambilFoto('fotoDepan')">
+                📷 Ambil / Pilih Foto
+              </button>
+              <button class="btn-foto-simpan" id="simpan-fotoDepan" onclick="simpanFotoGaleri('fotoDepan', 'Foto_Depan_Rumah')">
+                💾 Simpan
+              </button>
+            </div>
+            <img class="foto-preview" id="preview-fotoDepan" alt="Preview Depan Rumah">
+            <input type="file" id="fotoDepan" class="foto-input-hidden" accept="image/*" capture="environment"
+              onchange="onFotoChange('fotoDepan', 'Foto Depan Rumah')">
+          </div>
+
+        </div>
+
+        <!-- Checkboxes tambahan -->
+        <div
+          style="font-size:11px; font-weight:700; color:var(--muted); text-transform:uppercase; letter-spacing:0.5px; margin-top:12px; margin-bottom:6px;">
+          Dokumentasi Lainnya</div>
+        <div class="checkbox-grid">
           <div class="checkbox-item" onclick="toggleCb(this,'cbGeotagging')">
             <input type="checkbox" id="cbGeotagging">
             <div class="cb-box"></div>
             <span class="cb-label">Geotagging</span>
-          </div>
-          <div class="checkbox-item" onclick="toggleCb(this,'cbFotoRuang')">
-            <input type="checkbox" id="cbFotoRuang">
-            <div class="cb-box"></div>
-            <span class="cb-label">Foto Ruang Tamu</span>
-          </div>
-          <div class="checkbox-item" onclick="toggleCb(this,'cbFotoDepan')">
-            <input type="checkbox" id="cbFotoDepan">
-            <div class="cb-box"></div>
-            <span class="cb-label">Foto Depan Rmh</span>
           </div>
           <div class="checkbox-item" onclick="toggleCb(this,'cbFotoMeteran')">
             <input type="checkbox" id="cbFotoMeteran">
@@ -1156,6 +1322,79 @@ function doGet(e) {
       return document.getElementById(id).checked ? 'Ya' : 'Tidak';
     }
 
+    // ── FOTO: Picu input file (kamera/galeri) ──
+    function ambilFoto(inputId) {
+      document.getElementById(inputId).click();
+    }
+
+    // ── FOTO: Tampilkan preview setelah foto dipilih ──
+    function onFotoChange(inputId, labelFoto) {
+      const input = document.getElementById(inputId);
+      const file = input.files[0];
+      if (!file) return;
+
+      const preview = document.getElementById('preview-' + inputId);
+      const simpanBtn = document.getElementById('simpan-' + inputId);
+      const statusEl = document.getElementById('status-' + inputId);
+      const wrapEl = document.getElementById('wrap-' + inputId);
+
+      // Buat URL preview
+      const url = URL.createObjectURL(file);
+      preview.src = url;
+      preview.classList.add('visible');
+
+      // Tampilkan tombol simpan
+      simpanBtn.classList.add('visible');
+
+      // Update status
+      statusEl.textContent = '✓ Sudah difoto';
+      wrapEl.classList.add('has-photo');
+    }
+
+    // ── FOTO: Simpan foto ke galeri HP ──
+    async function simpanFotoGaleri(inputId, namaFile) {
+      const input = document.getElementById(inputId);
+      const file = input.files[0];
+      if (!file) {
+        showToast('⚠️ Belum ada foto yang dipilih!', 'error');
+        return;
+      }
+
+      const namaKK = (document.getElementById('namaKK').value.trim() || 'Pendataan')
+        .replace(/[^a-zA-Z0-9]/g, '_');
+      const timestamp = new Date().toISOString().slice(0, 10).replace(/-/g, '');
+      const namaUnduh = `${namaFile}_${namaKK}_${timestamp}`;
+
+      // Coba Web Share API (lebih baik di mobile — langsung ke galeri/apps)
+      if (navigator.canShare && navigator.canShare({ files: [file] })) {
+        try {
+          await navigator.share({
+            files: [new File([file], namaUnduh + '.jpg', { type: file.type })],
+            title: namaFile.replace(/_/g, ' ')
+          });
+          showToast('✅ Foto berhasil dibagikan / disimpan!', 'sukses');
+          return;
+        } catch (e) {
+          if (e.name !== 'AbortError') {
+            // Jika share gagal, lanjut ke fallback download
+          } else {
+            return; // User batalkan
+          }
+        }
+      }
+
+      // Fallback: unduh langsung ke penyimpanan HP
+      const url = URL.createObjectURL(file);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = namaUnduh + '.jpg';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+      showToast('✅ Foto disimpan ke folder Unduhan!', 'sukses');
+    }
+
     // ── Tampilkan toast ──
     let toastTimer;
     function showToast(msg, type, duration = 3000) {
@@ -1178,13 +1417,26 @@ function doGet(e) {
     // ── Reset form ──
     function resetForm() {
       tutupModal();
-      // Reset semua input
+      // Reset semua input teks & select
       document.querySelectorAll('input, select').forEach(el => {
         if (el.type === 'checkbox') el.checked = false;
         else el.value = '';
       });
       // Reset checkbox UI
       document.querySelectorAll('.checkbox-item').forEach(el => el.classList.remove('checked'));
+
+      // Reset UI komponen foto
+      ['fotoKK', 'fotoRuang', 'fotoDepan'].forEach(id => {
+        const preview = document.getElementById('preview-' + id);
+        const simpanBtn = document.getElementById('simpan-' + id);
+        const statusEl = document.getElementById('status-' + id);
+        const wrapEl = document.getElementById('wrap-' + id);
+        if (preview) { preview.src = ''; preview.classList.remove('visible'); }
+        if (simpanBtn) simpanBtn.classList.remove('visible');
+        if (statusEl) statusEl.textContent = 'Belum difoto';
+        if (wrapEl) wrapEl.classList.remove('has-photo');
+      });
+
       // Scroll ke atas
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
@@ -1216,10 +1468,10 @@ function doGet(e) {
         noTlp: document.getElementById('noTlp').value.trim(),
         ijasahKK: document.getElementById('ijasahKK').value,
         bpjs: document.getElementById('bpjs').value,
-        fotoKK: cbVal('cbFotoKK'),
+        fotoKK: document.getElementById('fotoKK').files.length > 0 ? 'Ya' : 'Tidak',
         geotagging: cbVal('cbGeotagging'),
-        fotoRuang: cbVal('cbFotoRuang'),
-        fotoDepan: cbVal('cbFotoDepan'),
+        fotoRuang: document.getElementById('fotoRuang').files.length > 0 ? 'Ya' : 'Tidak',
+        fotoDepan: document.getElementById('fotoDepan').files.length > 0 ? 'Ya' : 'Tidak',
         fotoMeteran: cbVal('cbFotoMeteran'),
         noMeter: document.getElementById('noMeter').value.trim(),
         kwhWatt: document.getElementById('kwhWatt').value.trim(),
@@ -1321,10 +1573,10 @@ function doGet(e) {
       const docsList = document.getElementById('r-docs-list');
       docsList.innerHTML = '';
       const docLabels = {
-        'Foto KK': document.getElementById('cbFotoKK').checked,
+        'Foto KK': document.getElementById('fotoKK').files.length > 0,
         'Geotagging': document.getElementById('cbGeotagging').checked,
-        'Foto Ruang': document.getElementById('cbFotoRuang').checked,
-        'Foto Depan': document.getElementById('cbFotoDepan').checked,
+        'Foto Ruang': document.getElementById('fotoRuang').files.length > 0,
+        'Foto Depan': document.getElementById('fotoDepan').files.length > 0,
         'Foto Meteran': document.getElementById('cbFotoMeteran').checked
       };
       for (const [name, checked] of Object.entries(docLabels)) {
